@@ -1,10 +1,14 @@
 package;
 
 import openfl.display.Sprite;
+import openfl.events.Event;
 import Random;
+
 
 class Main extends Sprite
 {
+		var heads:Array<Head>;
+
 	var walls:Array<Array<Bool>>;
 	var flats:Array<Array<Bool>>;
 
@@ -61,5 +65,50 @@ class Main extends Sprite
 			}while(x<xDim);
 			x = 0;
 		}while(y<yDim);
+
+		var maxTail=5;
+		heads = new Array<Head>();
+
+		var xStart:Int = Random.int(0,Std.int(xDim/3));
+
+		trace("Starting at: "+xStart);
+
+		heads.push(new Head(xStart));
+
+		addEventListener(Event.ENTER_FRAME, updateHeads );
+
+	}
+
+	function updateHeads(event:Event):Void{
+
+		heads = heads.filter(filterHead);
+	}
+
+	function filterHead(head:Head):Bool{
+		var alive = head.update();
+		head.render();
+		return alive;
+	}
+}
+
+class Head extends Sprite{
+	var xP:Int;
+	var yP:Int;
+	var tail:Int;
+	public function new(x:Int) {
+		super();
+		this.x = x;
+		this.y = 0;
+		this.tail = 0;
+		this.opaqueBackground = 0xff0000;
+	}
+
+	public function update() {
+
+	}
+
+	public function render() {
+
+		return true;
 	}
 }
