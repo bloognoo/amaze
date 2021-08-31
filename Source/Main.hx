@@ -4,13 +4,44 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import Random;
 
+class Cell extends Sprite {
+
+	public var xPos:Int;
+	public var yPos:Int;
+	var wall:Bool;
+	var floor:Bool;
+	var value:Int;
+	var yd:Int;
+	var xd:Int;
+	var thickness:Int;
+
+	public function new(xP:Int,yP:Int,wl:Bool,fl:Bool){
+		super();
+		xPos = xP;
+		yPos = yP;
+		wall = wl;
+		floor = fl;
+		value = 0;
+		yd= 20;
+		xd= 20;
+		thickness=2;
+		if(wall){
+			graphics.beginFill(0x000000);
+			graphics.drawRect((x-1)*xd,y*yd,xd+thickness,thickness);
+			graphics.endFill();
+		}
+		if(floor){
+			graphics.beginFill(0x000000);
+			graphics.drawRect(x*xd,y*yd,thickness,-yd-thickness);
+			graphics.endFill();
+		}
+		trace("("+xPos+","+yPos+") "+wall+" "+floor);
+	}
+}
 
 class Main extends Sprite
 {
-		var heads:Array<Head>;
-
-	var walls:Array<Array<Bool>>;
-	var flats:Array<Array<Bool>>;
+	var cells:Array<Cell>;
 
 	static var wallPc:Float = 0.5;
 	static var flatPc:Float = 0.3;
@@ -22,93 +53,56 @@ class Main extends Sprite
 	{
 		super();
 
-		walls = new Array<Array<Bool>>();
-		flats = new Array<Array<Bool>>();
+		cells = new Array<Cell>();
+
+		var len = xDim * yDim;
+
 		//generate
-		for(y in 0...yDim){
-			walls.push(new Array<Bool>());
-			flats.push(new Array<Bool>());
-			for(x in 0...xDim){
-				if(Random.float(0,1)<wallPc){
-					walls[y].push(true);
-				}else{
-					walls[y].push(false);
-				}
-				if(Random.float(0,1)<flatPc){
-					flats[y].push(true);
-				}else{
-					flats[y].push(false);
-				}
-			}
+		for(n in 0...len){
+			var cell = new Cell(
+					n%xDim,
+					Std.int(n/yDim),
+					Random.float(0,1)<wallPc,
+					Random.float(0,1)<flatPc
+					);
+			addChild(cell);
+			cell.x = xDim * cell.xPos;
+			cell.y = yDim * cell.yPos;
 		}
 
-		var y:Int = 0;
-		var x:Int = 0;
-		var yd:Int = 20;
-		var xd:Int = 20;
-		var thickness:Int=2;
+		// do{
+		//	y++;
+		//	do{
+		//		x++;
+		//		if(walls[y-1][x-1]){
+		//		}
+		//		if(flats[y-1][x-1]){
+		//		}
+		//	}while(x<xDim);
+		//	x = 0;
+		// }while(y<yDim);
 
-		do{
-			y++;
-			do{
-				x++;
-				if(walls[y-1][x-1]){
-					graphics.beginFill(0x000000);
-					graphics.drawRect((x-1)*xd,y*yd,xd,thickness);
-					graphics.endFill();
-				}
-				if(flats[y-1][x-1]){
-					graphics.beginFill(0x000000);
-					graphics.drawRect(x*xd,y*yd,thickness,-yd);
-					graphics.endFill();
-				}
-			}while(x<xDim);
-			x = 0;
-		}while(y<yDim);
+		// var maxTail=5;
+		// heads = new Array<Head>();
 
-		var maxTail=5;
-		heads = new Array<Head>();
+		// var xStart:Int = Random.int(0,Std.int(xDim/3));
 
-		var xStart:Int = Random.int(0,Std.int(xDim/3));
+		// trace("Starting at: "+xStart);
 
-		trace("Starting at: "+xStart);
+		// heads.push(new Head(xStart));
 
-		heads.push(new Head(xStart));
-
-		addEventListener(Event.ENTER_FRAME, updateHeads );
+		// addEventListener(Event.ENTER_FRAME, updateHeads );
 
 	}
 
-	function updateHeads(event:Event):Void{
+	// function updateHeads(event:Event):Void{
 
-		heads = heads.filter(filterHead);
-	}
+	// 	heads = heads.filter(filterHead);
+	// }
 
-	function filterHead(head:Head):Bool{
-		var alive = head.update();
-		head.render();
-		return alive;
-	}
-}
-
-class Head extends Sprite{
-	var xP:Int;
-	var yP:Int;
-	var tail:Int;
-	public function new(x:Int) {
-		super();
-		this.x = x;
-		this.y = 0;
-		this.tail = 0;
-		this.opaqueBackground = 0xff0000;
-	}
-
-	public function update() {
-
-	}
-
-	public function render() {
-
-		return true;
-	}
+	// function filterHead(head:Head):Bool{
+	// 	var alive = head.update();
+	// 	head.render();
+	// 	return alive;
+	// }
 }
