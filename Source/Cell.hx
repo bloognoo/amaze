@@ -7,8 +7,8 @@ import openfl.Assets;
 
 class Cell extends Sprite {
 
-	public static int OFF = 0;
-	public static int ON = 1;
+	public static var OFF:Int = 0;
+	public static var ON:Int = 1;
 
 	public var xPos:Int;
 	public var yPos:Int;
@@ -44,17 +44,23 @@ class Cell extends Sprite {
 		// trace("("+xPos+","+yPos+") "+wall+" "+floor);
 
 		tex = new Bitmap(Assets.getBitmapData("assets/xhatch.png"));
-		addChild(tex);
+		// addChild(tex);
 		tex.width = xd;
 		tex.height = yd;
 	}
 
 	public function activate(){
 		//TODO Implement Activate
-		state = OM;
+		state = ON;
+		addChild(tex);
 	}
 
-	public function update(){
+	public function update(l:Cell,r:Cell,d:Cell){
 		//TODO Implement Update
+		if(state){
+			if(l!=null &&!l.wall() && !l.active()){
+				l.activate();
+			}
+		}	
 	}
 }

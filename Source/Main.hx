@@ -54,10 +54,7 @@ class Main extends Sprite
 	function frame(event:Event):Void{
 		//test cell and grow out
 		cells.foreach(function (cell){
-			if(cell.value > 0){
-				cell.update();
-			}
-
+			cell.update();
 			return true;
 		});
 	}
