@@ -43,7 +43,7 @@ class Cell extends Sprite {
 		}
 		// trace("("+xPos+","+yPos+") "+wall+" "+floor);
 
-		tex = new Bitmap(Assets.getBitmapData("assets/xhatch.png"));
+		tex = new Bitmap(Assets.getBitmapData("assets/lightning.png"));
 		// addChild(tex);
 		tex.width = xd;
 		tex.height = yd;
