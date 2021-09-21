@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
+
 	<meta title="Amaze" package="com.sample.amaze" version="1.0.0" company="Company Name" />
 	<app main="Main" path="Export" file="Amaze" />
-	
+
 	<source path="Source" />
-	
+
 	<haxelib name="openfl" />
 	<haxelib name="random" />
-	
+
 	<assets path="Assets" rename="assets" />
-	
+
+	<window vsync="false" fps="200"/>
+
 </project>

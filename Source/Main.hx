@@ -1,43 +1,12 @@
 package;
 
-import openfl.display.Sprite;
-import openfl.events.Event;
+import Cell;
 import Random;
+import openfl.events.Event;
+import openfl.display.Sprite;
+import openfl.display.FPS;
 
-class Cell extends Sprite {
-
-	public var xPos:Int;
-	public var yPos:Int;
-	var wall:Bool;
-	var floor:Bool;
-	var value:Int;
-	var yd:Int;
-	var xd:Int;
-	var thickness:Int;
-
-	public function new(xP:Int,yP:Int,wl:Bool,fl:Bool){
-		super();
-		xPos = xP;
-		yPos = yP;
-		wall = wl;
-		floor = fl;
-		value = 0;
-		yd= 20;
-		xd= 20;
-		thickness=2;
-		if(wall){
-			graphics.beginFill(0x000000);
-			graphics.drawRect((x-1)*xd,y*yd,xd+thickness,thickness);
-			graphics.endFill();
-		}
-		if(floor){
-			graphics.beginFill(0x000000);
-			graphics.drawRect(x*xd,y*yd,thickness,-yd-thickness);
-			graphics.endFill();
-		}
-		trace("("+xPos+","+yPos+") "+wall+" "+floor);
-	}
-}
+using Lambda;
 
 class Main extends Sprite
 {
@@ -46,12 +15,17 @@ class Main extends Sprite
 	static var wallPc:Float = 0.5;
 	static var flatPc:Float = 0.3;
 
-	static var xDim:Int = 30;
-	static var yDim:Int = 30;
+	static var xDim:Int = 20;
+	static var yDim:Int = 20;
 
 	public function new()
 	{
 		super();
+
+		var fps = new FPS();
+		fps.x = -30;
+		fps.y = -30;
+		addChild(fps);
 
 		cells = new Array<Cell>();
 
@@ -68,41 +42,28 @@ class Main extends Sprite
 			addChild(cell);
 			cell.x = xDim * cell.xPos;
 			cell.y = yDim * cell.yPos;
+			cells.push(cell);
 		}
 
-		// do{
-		//	y++;
-		//	do{
-		//		x++;
-		//		if(walls[y-1][x-1]){
-		//		}
-		//		if(flats[y-1][x-1]){
-		//		}
-		//	}while(x<xDim);
-		//	x = 0;
-		// }while(y<yDim);
+		cells[Std.int(xDim/2)].activate();
 
-		// var maxTail=5;
-		// heads = new Array<Head>();
-
-		// var xStart:Int = Random.int(0,Std.int(xDim/3));
-
-		// trace("Starting at: "+xStart);
-
-		// heads.push(new Head(xStart));
-
-		// addEventListener(Event.ENTER_FRAME, updateHeads );
-
+		addEventListener(Event.ENTER_FRAME, frame );
+		addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 	}
 
-	// function updateHeads(event:Event):Void{
+	function frame(event:Event):Void{
+		//test cell and grow out
+		cells.foreach(function (cell){
+			if(cell.value > 0){
+				cell.update();
+			}
 
-	// 	heads = heads.filter(filterHead);
-	// }
+			return true;
+		});
+	}
 
-	// function filterHead(head:Head):Bool{
-	// 	var alive = head.update();
-	// 	head.render();
-	// 	return alive;
-	// }
+	function addedToStage(event:Event):Void{
+		x = 30;
+		y = 30;
+	}
 }
